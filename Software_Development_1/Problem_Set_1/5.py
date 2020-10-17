@@ -1,6 +1,6 @@
+# Import required functions from module math
 from math import ceil, floor
 
-# TODO: Add a check to see if savings is greater than salary
 
 def main():
     # Input valid user data
@@ -9,10 +9,18 @@ def main():
             house_cost = float(input("Enter the cost of your future home: "))
             annual_salary = float(input("Enter you annual salary: "))
             savings_reserve = float(input("Enter the portion of salary to be saved: "))
+
+            # Throw an error if savings is greater than annual salary
+            if savings_reserve > annual_salary:
+                print("ERROR: Annual savings is greater than annual salary")
+                continue
+
         except ValueError:
-            print("Sorry incorrect input. Please enter a numerical value.")
+            print("ERROR: Please enter a numerical value.")
             continue
+
         else:
+            # If no errors occured then break out of loop
             break
 
     # Insert new line character to seperate input from output
