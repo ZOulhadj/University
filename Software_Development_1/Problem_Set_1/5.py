@@ -2,6 +2,9 @@
 from math import ceil, floor
 
 
+# This program calculates how long it would take to save up for a down payment.
+
+
 def main():
     # Input valid user data
     while True:

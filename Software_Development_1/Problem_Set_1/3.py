@@ -1,3 +1,18 @@
+"""
+
+This program asks the user to input a year and based on their input
+the program will determin which animal is associated with that year
+according to the chinese calendar.
+
+Notes:
+The equation to determine the animal of a specific year is
+(year - 2000) % 12. This would return the remainder.
+In this program, the remainder is used as an index value
+for the animals array.
+
+"""
+
+
 def main():
     animals = [
         "Dragon",
@@ -14,24 +29,22 @@ def main():
         "Hare"
     ]
 
-    # Ask the user to input the year
-    year = int(input("Enter a year: "))
+    # Ensure the user inputs the correct value
+    while True:
+        try:
+            # Ask the user to input the year
+            year = int(input("Enter a year: "))
 
-    # TODO: Find out if there is a better way
-    # to do this below
+        except ValueError:
+            print("Invalid input")
+            continue
 
+        else:
+            break
 
-    # Find last two digits of the inputted year
-    index = int(str(year)[-2])
+    # Print the animal of the inputted year
+    print(f"The animal of the year {year} is: ", animals[(year - 2000) % 12])
 
-    # If the last two digits are beyond the array
-    # bounds then find out the last digit and that
-    # will be the index position
-    if index > 11:
-        i = int(str(year)[-1])
-        print(animals[i])
-    else:
-        print(animals[index])
 
 if __name__ == "__main__":
     main()

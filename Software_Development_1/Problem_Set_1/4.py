@@ -1,4 +1,5 @@
-# Program entry point
+# This program prints the mutiplication table from 1 up to 10.
+
 def main():
 
     # Print each column number
@@ -19,6 +20,7 @@ def main():
             print("{:>2}".format((x+1) * (y+1)), end=" ")
 
         print("")
+
 
 if __name__ == "__main__":
     main()
