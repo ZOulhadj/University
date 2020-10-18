@@ -40,8 +40,7 @@ def main():
         print("Cannot divide by zero")
 
     # Remainder
-    remainder = x % y
-    print("The remainder is: ", remainder)
+    print("The remainder is: ", x % y)
 
     # Log
     if (x > 1):
