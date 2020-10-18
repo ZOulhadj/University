@@ -5,6 +5,11 @@ from math import ceil, floor
 # This program calculates how long it would take to save up for a down payment.
 
 
+# This function returns a value given a specified percentage
+def find_percentage(percentage, value):
+    return float((percentage * value) / 100)
+
+
 def main():
     # Input valid user data
     while True:
@@ -30,7 +35,7 @@ def main():
     print("\n")
 
     # The amount of down payment based on house price
-    down_payment = (25.0 * house_cost) / 100.0
+    down_payment = find_percentage(25, house_cost)
 
     # This sets how much will be saved per year in savings
     annual_savings = annual_salary - savings_reserve
@@ -50,10 +55,10 @@ def main():
         savings_before_limit = monthly_savings
 
         # Set monthly savings to 10% of their monthly salary
-        monthly_savings = (10.0 * monthly_salary) / 100.0
+        monthly_savings = find_percentage(10, monthly_salary)
 
     # Calculate return of investments based on 0.04% of savings per month
-    monthly_interest = (0.04 * monthly_savings) / 100.0
+    monthly_interest = find_percentage(0.04, monthly_savings)
 
     # Add 0.04% of investment back into savings
     monthly_savings += monthly_interest
