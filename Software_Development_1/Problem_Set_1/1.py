@@ -19,14 +19,14 @@ print function directly.
 """
 
 def main():
-    # Ask the user to input two values
+    # Ask the user to input two integer values
     x = int(input("Enter first integer number: "))
     y = int(input("Enter second integer number: "))
 
     # Sum
     print(f"The sum of {x} + {y}: ", x + y)
 
-    # Difference
+    # Difference using absolute value
     print(f"The difference between {x} and {y}: ", abs(x - y))
 
     # Product

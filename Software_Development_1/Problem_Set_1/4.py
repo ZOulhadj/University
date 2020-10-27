@@ -17,7 +17,7 @@ def main():
 
         # For each row print column numbers
         for y in range(10):
-            print("{:>2}".format((x+1) * (y+1)), end=" ")
+            print("{:>2}".format((x + 1) * (y + 1)), end=" ")
 
         print("")
 
