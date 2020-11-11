@@ -1,5 +1,3 @@
-from math import log10
-
 """
 
 This program prints the result of various operations
@@ -17,6 +15,10 @@ variable memory address since the value is passed into the
 print function directly.
 
 """
+
+
+from math import log10
+
 
 def main():
     # Ask the user to input two integer values

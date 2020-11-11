@@ -1,8 +1,12 @@
+"""
+
+This program calculates how long it would take to save up for a down payment.
+
+"""
+
+
 # Import required functions from module math
 from math import ceil, floor
-
-
-# This program calculates how long it would take to save up for a down payment.
 
 
 # This function returns a value given a specified percentage
