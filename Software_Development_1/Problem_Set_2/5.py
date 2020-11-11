@@ -43,9 +43,9 @@ def main():
 
     # calculate the price for the group
     for guest in guest_ages:
-        if guest < 3:
+        if guest <= 3:
             baby_fee += 0 # or continue
-        elif guest >= 5 and guest <= 11:
+        elif guest >= 4 and guest <= 11:
             total += child_fee
         elif guest >= 70:
             total += elder_fee
