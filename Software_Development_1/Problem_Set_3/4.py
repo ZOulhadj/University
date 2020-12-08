@@ -15,15 +15,15 @@ of buffer data we are reading.
 """
 
 
-import os
+import os 
 
 
 def read_file(filename) -> str:
     """ Read the contents of a file and return contents """
-
+    
     with open(filename, 'r') as file:
         buffer = file.read()
-
+        
     return buffer
 
 
@@ -34,11 +34,18 @@ def write_file(filename, buffer) -> None:
         file.write(buffer)
 
 
-# read the contents of both files and store into a buffer variable
-buffer = read_file("file1.txt") + read_file("file2.txt")
+def main():
+	# read the contents of both files and store into a buffer variable
+	buffer = read_file("file1.txt") + read_file("file2.txt")
 
-# write the contents of both files into a new file named file3.txt
-write_file("file3.txt", buffer)
+	# write the contents of both files into a new file named file3.txt
+	write_file("file3.txt", buffer)
 
-# print the contents of file3.txt (the actual buffer in memory)
-print(buffer)
+	# print the combined text of file1 and file2 instead of reading the contents
+	# of the newly created file3.txt. This is much more efficient as the data is
+	# already in memory
+	print(buffer)
+
+
+if __name__ == "__main__":
+	main()
