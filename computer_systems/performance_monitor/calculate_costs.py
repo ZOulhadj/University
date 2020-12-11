@@ -7,7 +7,7 @@ hours_of_content = 100000
 # 720p, 1080p, 2160p
 sd_encoding = 0.25
 hd_encoding = 0.50
-uhd_encoding = 1
+uhd_encoding = 1.0
 
 # initial cost to setup a system
 initial_cost = 0
@@ -82,9 +82,16 @@ def main():
     # print the three mile stones
 
     print("50%: ", "£{:,.2f}".format(half_total_cost))
-    print("75%: ", "£{:,.2f}".format(third_total_cost))
-    print("100%: ", "£{:,.2f}".format(final_total_cost))
+    print("The number of systems: ", half_systems_count)
+    print("")
 
+    print("75%: ", "£{:,.2f}".format(third_total_cost))
+    print("The number of systems: ", third_systems_count)
+    print("")
+
+    print("100%: ", "£{:,.2f}".format(final_total_cost))
+    print("The number of systems: ", final_systems_count)
+    print("")
 
 
 if __name__ == "__main__":
