@@ -21,19 +21,19 @@ def total_fare(distance):
     # ensure a negative value for a distance cannot be entered
     if distance < 0:
         raise ValueError("Distance must be greater than 0")
-    
-    
+
+
     # return calculation
     return base_rate + (mile_rate * distance)
 
 
 def main():
-	# calculate fare price with a given distance
-	fare = total_fare(distance)
+        # calculate fare price with a given distance
+        fare = total_fare(distance)
 
-	# output fare price
-	print("Total fare: " + "£{:.2f}".format(fare))
+        # output fare price
+        print("Total fare: " + "£{:.2f}".format(fare))
 
 
 if __name__ == "__main__":
-	main()
+        main()
