@@ -5,17 +5,39 @@ hours_of_content = 100000
 
 # encoding time length for 1 hour of footage
 # 720p, 1080p, 2160p
+
+
+# system 1 (720p) | 8 hours | initial cost £3000 | cost per hour £0.30
+# system 1 (1080p) | 16 hours | initial cost £3000 | cost per hour £0.30
+# system 1 (2160p) | 32 hours | initial cost £3000 | cost per hour £0.30
+
+# system 2 (720p) | 6 hours | initial cost £5000 | cost per hour £0.60
+# system 2 (1080p) | 12 hours | initial cost £5000 | cost per hour £0.60
+# system 2 (2160p) | 24 hours | initial cost £5000 | cost per hour £0.60
+
+# system 3 (720p) | 3 hours | initial cost £10000 | cost per hour £1.00
+# system 3 (1080p) | 6 hours | initial cost £10000 | cost per hour £1.00
+# system 3 (2160p) | 12 hours | initial cost £10000 | cost per hour £1.00
+
+# system 4 (720p) | 1 hours | initial cost £20000 | cost per hour £1.50
+# system 4 (1080p) | 2 hours | initial cost £20000 | cost per hour £1.50
+# system 4 (2160p) | 4 hours | initial cost £20000 | cost per hour £1.50
+
+# system 5 (720p) | 0.25 hours | initial cost £0 | cost per hour £5.00
+# system 5 (1080p) | 0.50 hours | initial cost £0 | cost per hour £5.00
+# system 5 (2160p) | 1 hours | initial cost £0 | cost per hour £5.00
+
+
 sd_encoding = 0.25
 hd_encoding = 0.50
 uhd_encoding = 1.0
 
 # initial cost to setup a system
 initial_cost = 0
-
-
 running_cost = 5.0
 
 def main():
+
     # calculate the total amount of encoding hours
     sd_encoding_hours = hours_of_content * sd_encoding
     hd_encoding_hours = hours_of_content * hd_encoding
