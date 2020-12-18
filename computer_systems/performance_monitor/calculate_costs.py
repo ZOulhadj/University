@@ -30,11 +30,11 @@ hours_of_content = 100000
 
 sd_encoding = 0.25
 hd_encoding = 0.50
-uhd_encoding = 1.0
+uhd_encoding = 1.00
 
 # initial cost to setup a system
 initial_cost = 0
-running_cost = 5.0
+running_cost = 5.00
 
 def main():
 
@@ -90,10 +90,10 @@ def main():
 
     # calculate the total amount of cost at 100%
 
-    # note: 4704 is the amount of hours in 28 weeks...from 24 to 52 (year)
-    final_systems_count = math.ceil(third_encoding_hours / 4704)
+    # note: we have exactly 4728 hours remaining in the year
+    final_systems_count = math.ceil(third_encoding_hours / 4728)
 
-    final_running_cost = (4704 * running_cost) * final_systems_count
+    final_running_cost = (4728 * running_cost) * final_systems_count
 
     final_total_cost = third_total_cost + final_running_cost
 
