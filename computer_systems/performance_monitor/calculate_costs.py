@@ -28,13 +28,13 @@ hours_of_content = 100000
 # system 5 (2160p) | 1 hours | initial cost £0 | cost per hour £5.00
 
 
-sd_encoding = 0.25
-hd_encoding = 0.50
-uhd_encoding = 1.00
+sd_encoding = 8
+hd_encoding = 16
+uhd_encoding = 32
 
 # initial cost to setup a system
-initial_cost = 0
-running_cost = 5.00
+initial_cost = 3000
+running_cost = 0.30
 
 def main():
 
@@ -45,7 +45,7 @@ def main():
 
 
     # note: we multiply by 3 since there are 3 resolutions
-    total_content_hours = hours_of_content * 3
+    total_content_hours = hours_of_content
 
     total_encoding_hours = sd_encoding_hours + hd_encoding_hours + uhd_encoding_hours
 
