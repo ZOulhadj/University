@@ -3,8 +3,8 @@
 #include <stdbool.h>
 
 // external functions implemented in assembler
-extern char char_lower_case(char *c);
-extern char char_upper_case(char *c);
+extern char char_lower_case(int c);
+extern char char_upper_case(int c);
 
 /*
 
@@ -172,7 +172,7 @@ int main(int argc, char **argv)
         {
             for (int i = 0; buffer[i] != '\0'; ++i)
             {
-                char_upper_case(&buffer[i]);
+                buffer[i] = char_upper_case((int)buffer[i]);
             }
         }
         else if (args.case_conversion == LOWER_CASE)
@@ -180,14 +180,17 @@ int main(int argc, char **argv)
 
             for (int i = 0; buffer[i] != '\0'; ++i)
             {
+                int ascii_code = (int)buffer[i];
 
                 printf("%c -> ", buffer[i]);
-                char_lower_case(&buffer[i]);
-                //                printf("%c", buffer[i]);
+                buffer[i] = char_lower_case(ascii_code);
+                printf(" <- %c", buffer[i]);
                 printf("\n");
             }
         }
 
     }
+
+
     return 0;
 }
