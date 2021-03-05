@@ -2,18 +2,12 @@
 #include <string.h>
 #include <stdbool.h>
 
-// external functions implemented in assembler
+// TODO: If a certain case is specified make sure that case is ignored when that type
+// of character is inputted
+
+// external functions implemented in assembly
 extern char char_lower_case(int c);
 extern char char_upper_case(int c);
-
-/*
-
-
-    char *word = "this is a sentence\n";
-
-    lower_case(word);
-    upper_case(word);
-*/
 
 enum cases
 {
@@ -81,9 +75,6 @@ bool parse_arguments(int argc, char **argv, struct arguments *args)
                 {
                     args->input_method = USER_INPUT;
                     args->input_file = NULL;
-
-                    // skip reading the user input file
-                    ++i;
                 }
 
                 break;
@@ -97,9 +88,6 @@ bool parse_arguments(int argc, char **argv, struct arguments *args)
                 {
                     args->output_method = USER_OUTPUT;
                     args->output_file = NULL;
-
-                    // skip reaing the user output file
-                    ++i;
                 }
 
                 break;
@@ -131,16 +119,55 @@ void display_syntax()
     printf("\n");
 }
 
+bool is_alphabet(int code)
+{
+    // check if given code is within the alphabet
+    return (code >= 'a' && code <= 'z') || (code >= 'A' &&  code <= 'Z');
+}
+
+void tolower_case(char *c)
+{
+    // obtain the chracters ascii code
+    int ascii_code = (int)*c;
+
+    // if character is not within the alphabet ignore conversion
+    if (!is_alphabet(ascii_code))
+        return;
+
+    // convert to lower case
+    *c = char_lower_case(ascii_code);
+}
+
+void toupper_case(char *c)
+{
+    // obtain the chracters ascii code
+    int ascii_code = (int)*c;
+
+    // if character is not within the alphabet ignore conversion
+    if (!is_alphabet(ascii_code))
+        return;
+
+    // convert to lower case
+    *c = char_upper_case(ascii_code);
+}
+
+
 int main(int argc, char **argv)
 {
     // if no arguments are provived exit the program
     if (argc < 2)
+    {
+        display_syntax();
         return false;
+    }
 
     // set default arguments
     struct arguments args = {};
     args.case_conversion = DEFAULT_CASE;
     args.count = false;
+    char buffer[500];
+
+    int word_count = 0;
 
     // parse arguments
     bool parse = parse_arguments(argc, argv, &args);
@@ -163,7 +190,7 @@ int main(int argc, char **argv)
     }
     else if (args.input_method == USER_INPUT)
     {
-        char buffer[500];
+
         printf("%s", "Enter text: ");
         fgets(buffer, sizeof(buffer), stdin);
 
@@ -172,25 +199,43 @@ int main(int argc, char **argv)
         {
             for (int i = 0; buffer[i] != '\0'; ++i)
             {
-                buffer[i] = char_upper_case((int)buffer[i]);
+                toupper_case(&buffer[i]);
+
+                // increment word count when a space is found
+                if (buffer[i] == ' ')
+                    ++word_count;
             }
+
         }
         else if (args.case_conversion == LOWER_CASE)
         {
-
             for (int i = 0; buffer[i] != '\0'; ++i)
             {
-                int ascii_code = (int)buffer[i];
+                tolower_case(&buffer[i]);
 
-                printf("%c -> ", buffer[i]);
-                buffer[i] = char_lower_case(ascii_code);
-                printf(" <- %c", buffer[i]);
-                printf("\n");
+                // increment word count when a space is found
+                if (buffer[i] == ' ')
+                    ++word_count;
             }
+
         }
 
     }
 
+
+    // output the data
+    if (args.output_method == FILE_OUTPUT)
+    {
+
+    }
+    else if (args.output_method == USER_OUTPUT)
+    {
+        // print the converted text onto the console
+        for (int i = 0; buffer[i] != '\0'; ++i)
+        {
+            printf("%c", buffer[i]);
+        }
+    }
 
     return 0;
 }
