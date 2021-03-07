@@ -4,6 +4,8 @@
 
 #include <stdbool.h>
 
+#define MAX_BUFFER_SIZE 500
+
 enum cases
 {
     LOWER_CASE,
@@ -33,7 +35,7 @@ struct arguments
     bool count;
 
 
-    char buffer[500];
+    int buffer[MAX_BUFFER_SIZE];
 
 
     enum input input_method;
@@ -42,7 +44,7 @@ struct arguments
 
     enum output output_method;
     const char *output_file;
-};
+} args;
 
 
 /*
@@ -67,7 +69,7 @@ extern char char_lower_case(int c);
 extern char char_upper_case(int c);
 
 
-bool parse_arguments(int argc, char **argv, struct arguments *args);
+bool parse_arguments(int argument_count, char **arguments);
 
 void display_syntax();
 
@@ -77,10 +79,8 @@ void tolower_case(char *c);
 
 void toupper_case(char *c);
 
-bool read_file(const char *file_path, char *buffer);
+bool read_data();
 
-void read_data(struct arguments *args);
-
-bool output_data(struct arguments *args);
+bool output_data();
 
 #endif

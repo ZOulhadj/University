@@ -8,9 +8,9 @@
 // of character is inputted
 // TODO: Implement word count within assembly
 // TODO: Add documentation for all functions
-// TODO: Fix syntax error within switch statment
-
-bool parse_arguments(int argument_count, char **arguments, struct arguments *args)
+// TODO: Implement a dynamic buffer allocator? User could import a big file which would cause
+// a buffer overflow if we have a limited buffer number.
+bool parse_arguments(int argument_count, char **arguments)
 {
     int i = 1;
     while (i < argument_count)
@@ -19,45 +19,44 @@ bool parse_arguments(int argument_count, char **arguments, struct arguments *arg
         if (arguments[i][0] == '-')
         {
             // fill arguments structure based on arguments given
-            int c = (int)arguments[i][1];
 
-            switch (c)
+            // cast argument letter into an ascii code
+            int argument = (int)arguments[i][1];
+
+            switch (argument)
             {
             case 'u':
-                args->case_conversion = UPPER_CASE;
+                args.case_conversion = UPPER_CASE;
                 break;
             case 'l':
-                args->case_conversion = LOWER_CASE;
+                args.case_conversion = LOWER_CASE;
                 break;
             case 'c':
-                args->count = true;
+                args.count = true;
                 break;
             case 'i':
                 if (arguments[i + 1] != NULL && arguments[i + 1][0] != '-')
                 {
-
-                    args->input_method = FILE_INPUT;
-                    args->input_file = arguments[i + 1];
+                    args.input_method = FILE_INPUT;
+                    args.input_file = arguments[i + 1];
                 }
                 else
                 {
-                    args->input_method = USER_INPUT;
-                    args->input_file = NULL;
+                    args.input_method = USER_INPUT;
+                    args.input_file = NULL;
                 }
-
-                break;
+               break;
             case 'o':
                 if (arguments[i + 1] != NULL)
                 {
-                    args->output_method = FILE_OUTPUT;
-                    args->output_file = arguments[i + 1];
+                    args.output_method = FILE_OUTPUT;
+                    args.output_file = arguments[i + 1];
                 }
                 else
                 {
-                    args->output_method = USER_OUTPUT;
-                    args->output_file = NULL;
+                    args.output_method = USER_OUTPUT;
+                    args.output_file = NULL;
                 }
-
                 break;
             default:
                 return false;
@@ -95,112 +94,98 @@ bool is_alphabet(int code)
     return (code >= 'a' && code <= 'z') || (code >= 'A' &&  code <= 'Z');
 }
 
-
-void tolower_case(char *c)
+void convert_case()
 {
-    // obtain the characters ascii code
-    int ascii_code = (int)*c;
-
-    // if character is not within the alphabet ignore conversion
-    if (!is_alphabet(ascii_code))
-        return;
-
-    // convert to lower case
-    *c = char_lower_case(ascii_code);
-}
-
-
-void toupper_case(char *c)
-{
-    // obtain the characters ascii code
-    int ascii_code = (int)*c;
-
-    // if character is not within the alphabet ignore conversion
-    if (!is_alphabet(ascii_code))
-        return;
-
-    // convert to lower case
-    *c = char_upper_case(ascii_code);
-}
-
-
-bool read_file(const char *file_path, char *buffer)
-{
-    FILE *file = fopen(file_path, "r");
-
-    if (!file)
-        return false;
-
-    // read contents of file into buffer array
-    int c, i = 0;
-    while ((c = fgetc(file)) != EOF)
+    // convert to specific case based on argument
+    if (args.case_conversion == LOWER_CASE)
     {
-        buffer[i] = (char)c;
-        ++i;
+        for (int i = 0; args.buffer[i] != '\0'; ++i)
+        {
+            // obtain the characters ascii code
+            int character = args.buffer[i];
+
+            // only convert case if character is an alphabet
+            if (is_alphabet(character))
+                args.buffer[i] = char_lower_case(character);
+        }
+
     }
+    else if (args.case_conversion == UPPER_CASE)
+    {
+        for (int i = 0; args.buffer[i] != '\0'; ++i)
+        {
+            // obtain the characters ascii code
+            int character = args.buffer[i];
+
+            // only convert case if character is an alphabet
+            if (is_alphabet(character))
+                args.buffer[i] = char_upper_case(character);
+        }
+
+    }
+}
+
+
+bool read_data()
+{
+
+    switch (args.input_method)
+    {
+    case FILE_INPUT:
+    {
+        FILE *file = fopen(args.input_file, "r");
+        if (!file)
+        {
+            printf("%s\n", "Error: Failed loading input data from file");
+            return false;
+        }
+
+        // read contents of file into buffer array
+        int character, i = 0;
+        while ((character = fgetc(file)) != EOF)
+        {
+            // store each character as an ascii code
+            args.buffer[i] = character;
+            ++i;
+        }
+
+        fclose(file);
+
+        convert_case();
+
+        break;
+    }
+    case USER_INPUT:
+    {
+        printf("%s", "Enter text: ");
+
+        // since fgets only allows us to store into a char* array, we create
+        // a temp char* buffer and then copy its contents to our struct
+        // buffer by casting it into an int. Not great but it will do
+        // for now.
+        char buffer[MAX_BUFFER_SIZE];
+        fgets(buffer, sizeof(buffer), stdin);
+
+        for (int i = 0; buffer[i] != '\0'; ++i)
+            args.buffer[i] = (int)buffer[i];
+
+        convert_case();
+
+        break;
+    }
+    };
+
 
     return true;
 }
 
 
-void read_data(struct arguments *args)
-{
-
-    switch (args->input_method)
-    {
-    case FILE_INPUT:
-        bool data = read_file(args->input_file, args->buffer);
-        if (!data)
-        {
-            printf("%s\n", "Error: Failed loading input data from file");
-            return;
-        }
-
-        if (args->case_conversion == UPPER_CASE)
-        {
-            for (int i = 0; args->buffer[i] != '\0'; ++i)
-                toupper_case(&args->buffer[i]);
-
-        }
-        else if (args->case_conversion == LOWER_CASE)
-        {
-            for (int i = 0; args->buffer[i] != '\0'; ++i)
-                tolower_case(&args->buffer[i]);
-
-        }
-
-        break;
-
-    case USER_INPUT:
-        printf("%s", "Enter text: ");
-        fgets(args->buffer, sizeof(args->buffer), stdin);
-
-
-        if (args->case_conversion == UPPER_CASE)
-        {
-            for (int i = 0; args->buffer[i] != '\0'; ++i)
-                toupper_case(&args->buffer[i]);
-
-        }
-        else if (args->case_conversion == LOWER_CASE)
-        {
-            for (int i = 0; args->buffer[i] != '\0'; ++i)
-                tolower_case(&args->buffer[i]);
-
-        }
-
-        break;
-    };
-
-}
-
-
-bool output_data(struct arguments *args)
+bool output_data()
 {
     // output the data
-    if (args->output_method == FILE_OUTPUT)
+    if (args.output_method == FILE_OUTPUT)
     {
-        FILE *file = fopen(args->output_file, "w");
+        FILE *file = fopen(args.output_file, "w");
 
         if (!file)
         {
@@ -209,17 +194,17 @@ bool output_data(struct arguments *args)
         }
 
         // write buffer into file
-        for (int i = 0; args->buffer[i] != '\0'; ++i)
-        {
-            fprintf(file, "%c", args->buffer[i]);
-        }
+        for (int i = 0; args.buffer[i] != '\0'; ++i)
+            fprintf(file, "%c", args.buffer[i]);
+
+        fclose(file);
     }
-    else if (args->output_method == USER_OUTPUT)
+    else if (args.output_method == USER_OUTPUT)
     {
         // print the converted text onto the console
-        for (int i = 0; args->buffer[i] != '\0'; ++i)
+        for (int i = 0; args.buffer[i] != '\0'; ++i)
         {
-            printf("%c", args->buffer[i]);
+            printf("%c", args.buffer[i]);
         }
 
 
@@ -246,7 +231,7 @@ int main(int argc, char **argv)
 
 
     // parse arguments
-    bool parse = parse_arguments(argc, argv, &args);
+    bool parse = parse_arguments(argc, argv);
     if (!parse)
     {
         printf("%s\n", "Error: Failed parsing arguments!");
@@ -256,12 +241,16 @@ int main(int argc, char **argv)
     }
 
     // read data from the user (file or stdin)
-    read_data(&args);
-
+    bool data = read_data();
+    if (!data)
+    {
+        printf("%s\n", "Error: Failed to read data!");
+        return 0;
+    }
     // todo: check if valid data is set
 
     // Note: find out if outputting data can really return false
-    bool output = output_data(&args);
+    bool output = output_data();
     if (!output)
     {
         printf("%s\n", "Error: Failed to output data!");
