@@ -10,6 +10,8 @@
 // TODO: Add documentation for all functions
 // TODO: Implement a dynamic buffer allocator? User could import a big file which would cause
 // a buffer overflow if we have a limited buffer number.
+
+
 bool parse_arguments(int argument_count, char **arguments)
 {
     int i = 1;
@@ -97,20 +99,7 @@ bool is_alphabet(int code)
 void convert_case()
 {
     // convert to specific case based on argument
-    if (args.case_conversion == LOWER_CASE)
-    {
-        for (int i = 0; args.buffer[i] != '\0'; ++i)
-        {
-            // obtain the characters ascii code
-            int character = args.buffer[i];
-
-            // only convert case if character is an alphabet
-            if (is_alphabet(character))
-                args.buffer[i] = char_lower_case(character);
-        }
-
-    }
-    else if (args.case_conversion == UPPER_CASE)
+    if (args.case_conversion == UPPER_CASE)
     {
         for (int i = 0; args.buffer[i] != '\0'; ++i)
         {
@@ -123,15 +112,25 @@ void convert_case()
         }
 
     }
+    else if (args.case_conversion == LOWER_CASE)
+    {
+        for (int i = 0; args.buffer[i] != '\0'; ++i)
+        {
+            // obtain the characters ascii code
+            int character = args.buffer[i];
+
+            // only convert case if character is an alphabet
+            if (is_alphabet(character))
+                args.buffer[i] = char_lower_case(character);
+        }
+
+    }
 }
 
 
 bool read_data()
 {
-
-    switch (args.input_method)
-    {
-    case FILE_INPUT:
+    if (args.input_method == FILE_INPUT)
     {
         FILE *file = fopen(args.input_file, "r");
         if (!file)
@@ -150,12 +149,8 @@ bool read_data()
         }
 
         fclose(file);
-
-        convert_case();
-
-        break;
     }
-    case USER_INPUT:
+    else if (args.input_method == USER_INPUT)
     {
         printf("%s", "Enter text: ");
 
@@ -168,30 +163,21 @@ bool read_data()
 
         for (int i = 0; buffer[i] != '\0'; ++i)
             args.buffer[i] = (int)buffer[i];
-
-        convert_case();
-
-        break;
     }
-    };
 
 
     return true;
 }
 
 
-bool output_data()
+void output_data()
 {
     // output the data
     if (args.output_method == FILE_OUTPUT)
     {
         FILE *file = fopen(args.output_file, "w");
-
-        if (!file)
-        {
-            printf("%s\n", "Error: Failed to write output file!");
-            return false;
-        }
+        // todo: find out if writing a file could fail
+        // maybe program does not have permision to write file?
 
         // write buffer into file
         for (int i = 0; args.buffer[i] != '\0'; ++i)
@@ -203,15 +189,11 @@ bool output_data()
     {
         // print the converted text onto the console
         for (int i = 0; args.buffer[i] != '\0'; ++i)
-        {
             printf("%c", args.buffer[i]);
-        }
-
 
         // TODO: print the total word count
     }
 
-    return true;
 }
 
 
@@ -220,13 +202,14 @@ int main(int argc, char **argv)
     // if no arguments are provived exit the program
     if (argc < 2)
     {
+        // let the user know the correct usage
         display_syntax();
+
         return false;
     }
 
     // set default arguments
     struct arguments args = {};
-    args.case_conversion = DEFAULT_CASE;
     args.count = false;
 
 
@@ -249,14 +232,12 @@ int main(int argc, char **argv)
     }
     // todo: check if valid data is set
 
-    // Note: find out if outputting data can really return false
-    bool output = output_data();
-    if (!output)
-    {
-        printf("%s\n", "Error: Failed to output data!");
-        return 0;
-    }
 
+    // convert case
+    convert_case();
+
+    // TODO: find out if outputting data can really return false
+    output_data();
 
     return 0;
 }

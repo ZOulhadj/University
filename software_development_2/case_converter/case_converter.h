@@ -3,14 +3,14 @@
 
 
 #include <stdbool.h>
+#include <stddef.h>
 
 #define MAX_BUFFER_SIZE 500
 
 enum cases
 {
-    LOWER_CASE,
     UPPER_CASE,
-    DEFAULT_CASE = UPPER_CASE
+    LOWER_CASE
 };
 
 
@@ -32,8 +32,9 @@ struct arguments
 {
 
     enum cases case_conversion;
-    bool count;
 
+    bool count;
+    size_t word_count;
 
     int buffer[MAX_BUFFER_SIZE];
 
@@ -47,40 +48,9 @@ struct arguments
 } args;
 
 
-/*
- * char_lower_case(int c)
- *
- * Description: An assembly implemented function that accepts a single parameter
- * of type integer (ascii character code) and coverts it to lower case.
- *
- * Note: Only alphabetical characters are converted.
- */
-extern char char_lower_case(int c);
+extern int char_upper_case(int character);
+extern int char_lower_case(int character);
 
-
-/*
- * char_upper_case(int c)
- *
- * Description: An assembly implemented function that accepts a single parameter
- * of type integer (ascii character code) and coverts it to upper case.
- *
- * Note: Only alphabetical characters are converted.
- */
-extern char char_upper_case(int c);
-
-
-bool parse_arguments(int argument_count, char **arguments);
-
-void display_syntax();
-
-bool is_alphabet(int code);
-
-void tolower_case(char *c);
-
-void toupper_case(char *c);
-
-bool read_data();
-
-bool output_data();
+extern size_t increment_count();
 
 #endif
