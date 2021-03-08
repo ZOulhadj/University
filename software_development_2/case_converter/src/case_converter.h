@@ -1,11 +1,9 @@
 #ifndef _CASE_CONVERTER_H
 #define _CASE_CONVERTER_H
 
-
 #include <stdbool.h>
-#include <stddef.h>
 
-#define MAX_BUFFER_SIZE 500
+#include "array.h"
 
 enum cases
 {
@@ -36,8 +34,7 @@ struct arguments
     bool count;
     size_t word_count;
 
-    int buffer[MAX_BUFFER_SIZE];
-
+    struct array array;
 
     enum input input_method;
     const char *input_file;
@@ -47,10 +44,22 @@ struct arguments
     const char *output_file;
 } args;
 
+bool parse_arguments(int argument_count, char **arguments);
+
+
+void display_syntax();
+
+bool is_alphabet(int code);
+
+void convert_case();
+
+bool read_data();
+
+void output_data();
 
 extern int char_upper_case(int character);
 extern int char_lower_case(int character);
 
-extern size_t increment_count();
+extern int increment_count();
 
 #endif

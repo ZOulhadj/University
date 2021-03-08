@@ -1,20 +1,22 @@
-#include <stdio.h>
-#include <string.h>
-#include <stdbool.h>
-
 #include "case_converter.h"
 
-// TODO: If a certain case is specified make sure that case is ignored when that type
-// of character is inputted
-// TODO: Implement word count within assembly
-// TODO: Add documentation for all functions
-// TODO: Implement a dynamic buffer allocator? User could import a big file which would cause
-// a buffer overflow if we have a limited buffer number.
+#include <stdio.h>
+#include <stdbool.h>
+#include <string.h>
 
+/* bool get_argument(char **arguments, int position) */
+/* { */
+/*     if (arguments[position] == NULL) */
+/*         return false; */
+
+/*     return true; */
+/* } */
 
 bool parse_arguments(int argument_count, char **arguments)
 {
+    // start count at 1 since index 0 is the program name
     int i = 1;
+
     while (i < argument_count)
     {
         // parse arguments (i.e commands with a - infront) only
@@ -25,6 +27,8 @@ bool parse_arguments(int argument_count, char **arguments)
             // cast argument letter into an ascii code
             int argument = (int)arguments[i][1];
 
+
+            // TODO: Possibly clean up this part of the code
             switch (argument)
             {
             case 'u':
@@ -35,6 +39,7 @@ bool parse_arguments(int argument_count, char **arguments)
                 break;
             case 'c':
                 args.count = true;
+                args.word_count = 1;
                 break;
             case 'i':
                 if (arguments[i + 1] != NULL && arguments[i + 1][0] != '-')
@@ -101,27 +106,40 @@ void convert_case()
     // convert to specific case based on argument
     if (args.case_conversion == UPPER_CASE)
     {
-        for (int i = 0; args.buffer[i] != '\0'; ++i)
+        for (int i = 0; args.array.buffer[i] != '\0'; ++i)
         {
             // obtain the characters ascii code
-            int character = args.buffer[i];
+            int character = args.array.buffer[i];
 
-            // only convert case if character is an alphabet
-            if (is_alphabet(character))
-                args.buffer[i] = char_upper_case(character);
+            // only convert case if its a character
+            // also check if the opposite case character is within the alphabet
+            // to ensure that a captial letter is not converted
+            if (is_alphabet(character) && is_alphabet(character - 32))
+                args.array.buffer[i] = char_upper_case(character);
+
+
+            // if a space if detected, increment the word count
+            if (args.count && args.array.buffer[i] == ' ')
+                args.word_count += increment_count();
         }
-
     }
     else if (args.case_conversion == LOWER_CASE)
     {
-        for (int i = 0; args.buffer[i] != '\0'; ++i)
+        for (int i = 0; args.array.buffer[i] != '\0'; ++i)
         {
             // obtain the characters ascii code
-            int character = args.buffer[i];
+            int character = args.array.buffer[i];
 
-            // only convert case if character is an alphabet
-            if (is_alphabet(character))
-                args.buffer[i] = char_lower_case(character);
+            // only convert case if its a character
+            // also check if the opposite case character is within the alphabet
+            // to ensure that a lower case letter is not converted
+            if (is_alphabet(character) && is_alphabet(character + 32))
+                args.array.buffer[i] = char_lower_case(character);
+
+
+            // if a space if detected, increment the word count
+            if (args.count && args.array.buffer[i] == ' ')
+                args.word_count += increment_count();
         }
 
     }
@@ -140,15 +158,21 @@ bool read_data()
         }
 
         // read contents of file into buffer array
-        int character, i = 0;
+        int character;
+
         while ((character = fgetc(file)) != EOF)
-        {
-            // store each character as an ascii code
-            args.buffer[i] = character;
-            ++i;
-        }
+            insert_element(&args.array, character);
 
         fclose(file);
+
+        // set word count value
+        if (args.count)
+        {
+            if (args.array.buffer[0] == '\n')
+                args.word_count = 0;
+        }
+
+
     }
     else if (args.input_method == USER_INPUT)
     {
@@ -158,11 +182,23 @@ bool read_data()
         // a temp char* buffer and then copy its contents to our struct
         // buffer by casting it into an int. Not great but it will do
         // for now.
-        char buffer[MAX_BUFFER_SIZE];
+
+        // TODO: Make this buffer dynamic
+        char buffer[INITIAL_BUFFER_SIZE];
+
         fgets(buffer, sizeof(buffer), stdin);
 
         for (int i = 0; buffer[i] != '\0'; ++i)
-            args.buffer[i] = (int)buffer[i];
+            insert_element(&args.array, (int)buffer[i]);
+
+
+        // set word count value
+        if (args.count)
+        {
+            if (args.array.buffer[0] == '\n')
+                args.word_count = 0;
+        }
+
     }
 
 
@@ -180,64 +216,22 @@ void output_data()
         // maybe program does not have permision to write file?
 
         // write buffer into file
-        for (int i = 0; args.buffer[i] != '\0'; ++i)
-            fprintf(file, "%c", args.buffer[i]);
+        for (int i = 0; args.array.buffer[i] != '\0'; ++i)
+            fprintf(file, "%c", args.array.buffer[i]);
+
+        if (args.count)
+            printf("The total word count is: %lu\n", args.word_count);
 
         fclose(file);
     }
     else if (args.output_method == USER_OUTPUT)
     {
         // print the converted text onto the console
-        for (int i = 0; args.buffer[i] != '\0'; ++i)
-            printf("%c", args.buffer[i]);
+        for (int i = 0; args.array.buffer[i] != '\0'; ++i)
+            printf("%c", args.array.buffer[i]);
 
-        // TODO: print the total word count
+        if (args.count)
+            printf("The total word count is: %lu\n", args.word_count);
     }
 
-}
-
-
-int main(int argc, char **argv)
-{
-    // if no arguments are provived exit the program
-    if (argc < 2)
-    {
-        // let the user know the correct usage
-        display_syntax();
-
-        return false;
-    }
-
-    // set default arguments
-    struct arguments args = {};
-    args.count = false;
-
-
-    // parse arguments
-    bool parse = parse_arguments(argc, argv);
-    if (!parse)
-    {
-        printf("%s\n", "Error: Failed parsing arguments!");
-        display_syntax();
-
-        return 0;
-    }
-
-    // read data from the user (file or stdin)
-    bool data = read_data();
-    if (!data)
-    {
-        printf("%s\n", "Error: Failed to read data!");
-        return 0;
-    }
-    // todo: check if valid data is set
-
-
-    // convert case
-    convert_case();
-
-    // TODO: find out if outputting data can really return false
-    output_data();
-
-    return 0;
 }
