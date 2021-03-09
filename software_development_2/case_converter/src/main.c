@@ -1,12 +1,9 @@
 #include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 #include <stdbool.h>
 
 #include "case_converter.h"
 #include "array.h"
 
-// TODO: Implement word count within assembly
 // TODO: Add documentation for all functions
 // TODO: Find out when certain functions are supposed to be in the header file
 
@@ -20,10 +17,7 @@ int main(int argc, char **argv)
         return false;
     }
 
-    // set default arguments
-    struct arguments args = {};
-    args.count = false;
-
+    // initialise buffer that will be used to store input data
     initialise_array(&args.array);
 
     // parse arguments
@@ -36,7 +30,7 @@ int main(int argc, char **argv)
         return false;
     }
 
-    // read data from the user (file or stdin)
+    // read data from the user
     bool data = read_data();
     if (!data)
     {
@@ -54,7 +48,7 @@ int main(int argc, char **argv)
     // TODO: find out if outputting data can really return false
     output_data();
 
-    // clean up
+    // remove buffer from heap
     free_array(&args.array);
 
     return 0;

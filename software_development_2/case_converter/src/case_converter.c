@@ -4,14 +4,6 @@
 #include <stdbool.h>
 #include <string.h>
 
-/* bool get_argument(char **arguments, int position) */
-/* { */
-/*     if (arguments[position] == NULL) */
-/*         return false; */
-
-/*     return true; */
-/* } */
-
 bool parse_arguments(int argument_count, char **arguments)
 {
     // start count at 1 since index 0 is the program name
@@ -27,8 +19,6 @@ bool parse_arguments(int argument_count, char **arguments)
             // cast argument letter into an ascii code
             int argument = (int)arguments[i][1];
 
-
-            // TODO: Possibly clean up this part of the code
             switch (argument)
             {
             case 'u':
@@ -73,7 +63,6 @@ bool parse_arguments(int argument_count, char **arguments)
         ++i;
     }
 
-
     return true;
 }
 
@@ -92,57 +81,6 @@ void display_syntax()
     printf("%s\n", "<optional_file>: optional output file");
 
     printf("\n");
-}
-
-
-bool is_alphabet(int code)
-{
-    // check if given code is within the alphabet
-    return (code >= 'a' && code <= 'z') || (code >= 'A' &&  code <= 'Z');
-}
-
-void convert_case()
-{
-    // convert to specific case based on argument
-    if (args.case_conversion == UPPER_CASE)
-    {
-        for (int i = 0; args.array.buffer[i] != '\0'; ++i)
-        {
-            // obtain the characters ascii code
-            int character = args.array.buffer[i];
-
-            // only convert case if its a character
-            // also check if the opposite case character is within the alphabet
-            // to ensure that a captial letter is not converted
-            if (is_alphabet(character) && is_alphabet(character - 32))
-                args.array.buffer[i] = char_upper_case(character);
-
-
-            // if a space if detected, increment the word count
-            if (args.count && args.array.buffer[i] == ' ')
-                args.word_count += increment_count();
-        }
-    }
-    else if (args.case_conversion == LOWER_CASE)
-    {
-        for (int i = 0; args.array.buffer[i] != '\0'; ++i)
-        {
-            // obtain the characters ascii code
-            int character = args.array.buffer[i];
-
-            // only convert case if its a character
-            // also check if the opposite case character is within the alphabet
-            // to ensure that a lower case letter is not converted
-            if (is_alphabet(character) && is_alphabet(character + 32))
-                args.array.buffer[i] = char_lower_case(character);
-
-
-            // if a space if detected, increment the word count
-            if (args.count && args.array.buffer[i] == ' ')
-                args.word_count += increment_count();
-        }
-
-    }
 }
 
 
@@ -171,8 +109,6 @@ bool read_data()
             if (args.array.buffer[0] == '\n')
                 args.word_count = 0;
         }
-
-
     }
     else if (args.input_method == USER_INPUT)
     {
@@ -204,6 +140,56 @@ bool read_data()
 
     return true;
 }
+
+
+bool is_alphabet(int code)
+{
+    // check if given code is within the alphabet
+    return (code >= 'a' && code <= 'z') || (code >= 'A' &&  code <= 'Z');
+}
+
+void convert_case()
+{
+    // convert to specific case based on argument
+    if (args.case_conversion == UPPER_CASE)
+    {
+        for (int i = 0; args.array.buffer[i] != '\0'; ++i)
+        {
+            // obtain the characters ascii code
+            int character = args.array.buffer[i];
+
+            // only convert case if its a character
+            // also check if the opposite case character is within the alphabet
+            // to ensure that a captial letter is not converted
+            if (is_alphabet(character) && is_alphabet(character - 32))
+                args.array.buffer[i] = char_upper_case(character);
+
+            // if a space if detected, increment the word count
+            if (args.count && args.array.buffer[i] == ' ')
+                args.word_count += increment_count();
+        }
+    }
+    else if (args.case_conversion == LOWER_CASE)
+    {
+        for (int i = 0; args.array.buffer[i] != '\0'; ++i)
+        {
+            // obtain the characters ascii code
+            int character = args.array.buffer[i];
+
+            // only convert case if its a character
+            // also check if the opposite case character is within the alphabet
+            // to ensure that a lower case letter is not converted
+            if (is_alphabet(character) && is_alphabet(character + 32))
+                args.array.buffer[i] = char_lower_case(character);
+
+            // if a space if detected, increment the word count
+            if (args.count && args.array.buffer[i] == ' ')
+                args.word_count += increment_count();
+        }
+
+    }
+}
+
 
 
 void output_data()
