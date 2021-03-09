@@ -32,6 +32,8 @@ bool parse_arguments(int argument_count, char **arguments)
                 args.word_count = 1;
                 break;
             case 'i':
+                // if the next argument is not NULL and is not another argument
+                // then read it as a input file
                 if (arguments[i + 1] != NULL && arguments[i + 1][0] != '-')
                 {
                     args.input_method = FILE_INPUT;
@@ -39,11 +41,13 @@ bool parse_arguments(int argument_count, char **arguments)
                 }
                 else
                 {
+                    // if no argument is provided after -i then input will be taken through the console
                     args.input_method = USER_INPUT;
                     args.input_file = NULL;
                 }
                break;
             case 'o':
+                // if the next argument is not NULL then set that file as the output
                 if (arguments[i + 1] != NULL)
                 {
                     args.output_method = FILE_OUTPUT;
@@ -51,6 +55,7 @@ bool parse_arguments(int argument_count, char **arguments)
                 }
                 else
                 {
+                    // if no output file is provided then print it onto the console
                     args.output_method = USER_OUTPUT;
                     args.output_file = NULL;
                 }
@@ -72,7 +77,7 @@ void display_syntax()
     printf("\n");
 
     printf("%s\n", "-[u/l] -c -i <optional_file> -o <optional_file>");
-
+    printf("\n");
     printf("%s\n", "-u/l: uppercase/lowercase");
     printf("%s\n", "-c: count words (optional)");
     printf("%s\n", "-i: input file");

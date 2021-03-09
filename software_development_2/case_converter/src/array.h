@@ -5,6 +5,10 @@
 
 #define INITIAL_BUFFER_SIZE 100
 
+
+/*
+ * Array structure that holds the character data together with the array size and the number of elements used.
+ */
 struct array
 {
     int *buffer;

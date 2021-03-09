@@ -38,10 +38,6 @@ int main(int argc, char **argv)
         return false;
     }
 
-
-    // todo: check if valid data is set
-
-
     // convert case
     convert_case();
 

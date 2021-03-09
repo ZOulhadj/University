@@ -5,6 +5,11 @@
 
 #include "array.h"
 
+
+/*
+ * The following three structures are used within the arguments structure when reading data
+ * in regards to arguments given by the user
+ */
 enum cases
 {
     UPPER_CASE,
@@ -86,6 +91,9 @@ bool is_alphabet(int code);
 void convert_case();
 
 
+/*
+ * This function outputs the buffer data based on the specified output method
+ */
 void output_data();
 
 
