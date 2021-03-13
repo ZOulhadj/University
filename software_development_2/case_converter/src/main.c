@@ -4,9 +4,6 @@
 #include "case_converter.h"
 #include "array.h"
 
-// TODO: Add documentation for all functions
-// TODO: Find out when certain functions are supposed to be in the header file
-
 int main(int argc, char **argv)
 {
     // if no arguments are provived exit the program

@@ -2,7 +2,6 @@
     .global _char_lower_case
     .global _char_upper_case
     .global _increment_count
-    .extern _printf
 
 _char_lower_case:
     mov rax, rdi                // move ascii char code into return register
@@ -16,7 +15,6 @@ _char_upper_case:
 
     ret
 
-    // todo: continue working on this
 _increment_count:
     mov rax, 1
 
