@@ -4,6 +4,11 @@
 #include <stdlib.h>
 #include <stddef.h>
 
+/*
+ * The initial size given to the dynamic array. If more data is stored within
+ * the array than the size set by `INITIAL_BUFFER_SIZE`, the array will double
+ * in size to ensure the data can be allocated.
+ */
 #define INITIAL_BUFFER_SIZE 100
 
 /*
@@ -77,7 +82,9 @@ struct arguments
 } args;
 
 
-
+/*
+ * Initialises an int array of size `INITIAL_BUFFER_SIZE`.
+ */
 void initialise_array(struct array *a)
 {
     a->buffer = malloc(INITIAL_BUFFER_SIZE * sizeof(int));
@@ -85,18 +92,26 @@ void initialise_array(struct array *a)
     a->size   = INITIAL_BUFFER_SIZE;
 }
 
+/*
+ * Sets a new value within the array
+ */
 void insert_element(struct array *a, int element)
 {
+    // If all elements have been used up, create a new array which is double
+    // in size and copy data into the new array
     if (a->used == a->size)
     {
         a->size  *= 2;
         a->buffer = realloc(a->buffer, a->size * sizeof(int));
     }
 
-
+    // store element and increment a->used counter
     a->buffer[a->used++] = element;
 }
 
+/*
+ * Clear the array from the heap and cleanup other values
+ */
 void free_array(struct array *a)
 {
     free(a->buffer);
@@ -104,7 +119,6 @@ void free_array(struct array *a)
     a->used = 0;
     a->size = 0;
 }
-
 
 
 /*
@@ -124,6 +138,9 @@ extern int char_lower_case(int character);
 extern int increment_count();
 
 
+/*
+ * Handles the users given arguments and initialises the `arguments` structure.
+ */
 bool parse_arguments(int argument_count, char **arguments)
 {
     // start count at 1 since index 0 is the program name
@@ -192,6 +209,10 @@ bool parse_arguments(int argument_count, char **arguments)
 }
 
 
+/*
+ * Display the correct program usage in the event that a user provideds the
+ * incorrect syntax.
+ */
 void display_syntax()
 {
     printf("\n");
@@ -209,6 +230,9 @@ void display_syntax()
 }
 
 
+/*
+ * Read in the data given by the user either through a file or stdin.
+ */
 bool read_data()
 {
     if (args.input_method == FILE_INPUT)
@@ -266,13 +290,18 @@ bool read_data()
     return true;
 }
 
-
+/*
+ * This function is used to check if each character is within the alphabet
+ */
 bool is_alphabet(int code)
 {
     // check if given code is within the alphabet
     return (code >= 'a' && code <= 'z') || (code >= 'A' &&  code <= 'Z');
 }
 
+/*
+ * Convert the input data into a set case
+ */
 void convert_case()
 {
     // convert to specific case based on argument
@@ -316,7 +345,9 @@ void convert_case()
 }
 
 
-
+/*
+ * Outputs the data using the method specified by the user
+ */
 void output_data()
 {
     // output the data
@@ -383,7 +414,7 @@ int main(int argc, char **argv)
     // convert case
     convert_case();
 
-    // TODO: find out if outputting data can really return false
+
     output_data();
 
     // remove buffer from heap
