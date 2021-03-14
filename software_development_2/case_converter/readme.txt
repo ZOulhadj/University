@@ -21,6 +21,9 @@ Build notes:
                             This will create the executable which you can
                             then run.
 
+                            Please note that this has only been tested, compiled
+                            and excecuted on a macOS system.
+
 
 ***********************************
 *                                 *
