@@ -167,7 +167,7 @@ void convert(int number)
     if(number >= 1000)
     {
         convert(number / 1000);
-        printf("thousand");
+        printf("thousand ");
 
         if(number % 1000)
         {
@@ -180,10 +180,10 @@ void convert(int number)
     else if(number >= 100)
     {
         convert(number / 100);
-        printf("hundred");
+        printf("hundred ");
         if(number % 100)
         {
-            printf(" and ");
+            printf("and ");
             convert (number % 100);
         }
     }
